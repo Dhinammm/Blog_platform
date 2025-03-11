@@ -1,10 +1,10 @@
 class CreateArticles < ActiveRecord::Migration[8.0]
-  def change
-    create_table :articles do |t|
-      t.string :title
-      t.string :content
+    def change
+        create_table :articles do |t|
+            t.string :title
+            t.string :content
 
-      t.timestamps
+            t.timestamps
+        end
     end
-  end
 end
