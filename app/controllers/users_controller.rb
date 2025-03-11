@@ -1,4 +1,5 @@
 class UsersController < ApplicationController
+    allow_unauthenticated_access except: %i[ destroy ]
     def index
         @user = User.all
     end
@@ -27,12 +28,22 @@ class UsersController < ApplicationController
 
     def destroy
         user = User.find(params[:id])
-        user.destroy
-        redirect_to users_path
+        auth_user =User.find_by(id: session[:user_id])
+        if auth_user.nil?
+            redirect_to new_session_path
+        else
+            session[:user_id] = nil
+            if user.id != auth_user.id
+                redirect_to new_session_path
+            else
+                user.destroy
+                redirect_to users_path
+            end
+        end
     end
 
     private
     def user_params
-        params.expect(user: [:name, :email, :password])
+        params.expect(user: [:name, :email_address, :password])
     end
 end
